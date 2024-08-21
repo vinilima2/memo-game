@@ -2,6 +2,8 @@
 
 // Requisitar informações do ranking
 export const buscarRanking = async () => {
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
     const retorno = await Promise.resolve([
         { nome: 'Alice', pontos: 100 },
         { nome: 'Bob', pontos: 90 },
