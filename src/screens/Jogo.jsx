@@ -1,18 +1,25 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { cartas } from "../mocks/dados";
-import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import { cartas, dadosNivel } from "../mocks/dados";
+import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import Cartao from "../components/Cartao";
+import Cronometro from "../components/Cronometro";
+import Sucesso from "../assets/sucesso.mp3"
+import Erro from "../assets/erro.mp3"
+import Encerramento from "../assets/encerramento.mp3"
 
 
 
 export default function Jogo() {
-    let { nivel } = useParams();
+    const { nivel } = useParams();
     const [cartoes, setCartoes] = useState([])
-    const [cartoesSelecionados, setCartoesSelecionados] = useState([])
+    const itemsRef = useRef([]);
+    const refCronometro = useRef(null);
+    const [ultimoIndiceSelecionado, setUltimoIndiceSelecionado] = useState(undefined)
     const [acertos, setAcertos] = useState(0)
     const [erros, setErros] = useState(0)
-    const itemsRef = useRef([]);
+    const [iniciou, setIniciou] = useState(false)
+    const [pontuacao, setPontuacao] = useState(null)
 
     useEffect(() => {
         itemsRef.current = itemsRef.current.slice(0, cartoes.length);
@@ -22,21 +29,32 @@ export default function Jogo() {
         compararNivel(nivel)
     }, [])
 
+    useEffect(() => {
+        if (iniciou)
+            window.onbeforeunload = (event) => {
+                event.preventDefault()
+                return 'Deseja mesmo sair da página? Você vai perder o seu jogo em atividade.';
+            }
+    }, [iniciou])
+
+
     function compararNivel(nivel) {
-        if (nivel == 'facil') {
-            return gerarCartoes(3)
-        } else if (nivel == 'medio') {
-            return gerarCartoes(6)
-        } else if (nivel == 'dificil') {
-            return gerarCartoes(9)
-        }
-        throw new Error('Nenhum valor de nivel informado')
+        return gerarCartoes(dadosNivel[nivel].quantidadeCartas)
     }
+
+    useEffect(() => {
+        if (acertos === dadosNivel[nivel].quantidadeCartas) {
+            const tempoRestante = refCronometro.current.pararCronometro()
+            document.getElementById("encerramento").play()
+            const total = (acertos * dadosNivel[nivel].pesoAcerto) - (erros * dadosNivel[nivel].pesoErro) + (tempoRestante * dadosNivel[nivel].bonus)
+            setPontuacao(total)
+        }
+    }, [acertos])
 
     function gerarCartoes(quantidade) {
         const cartoesPadrao = cartas
         let cartoesEscolhidos = []
-        while (cartoesEscolhidos.length != quantidade) {
+        while (cartoesEscolhidos.length !== quantidade) {
             let posicao = Math.floor((Math.random() * cartoesPadrao.length) + 1)
             let cartaoEscolhido = cartoesPadrao[posicao]
             if (cartaoEscolhido) {
@@ -53,7 +71,7 @@ export default function Jogo() {
         let cartoesMesclados = []
 
 
-        while (cartoesMesclados.length != tamanhoLista) {
+        while (cartoesMesclados.length !== tamanhoLista) {
             let posicao = Math.floor((Math.random() * cartoesDuplicados.length))
             let cartao = cartoesDuplicados[posicao]
             if (cartao) {
@@ -66,25 +84,52 @@ export default function Jogo() {
 
 
     function iniciar() {
-        alterarStatusCartoes()
-        setTimeout(() => { alterarStatusCartoes() }, 10000)
+        setIniciou(true)
+        virarCartoes()
+        refCronometro.current.iniciarCronometro(dadosNivel[nivel].tempoLeitura)
+        setTimeout(() => {
+            virarCartoes()
+            bloquearCartoes()
+            refCronometro.current.pararCronometro()
+            refCronometro.current.iniciarCronometro(dadosNivel[nivel].tempoDesafio)
+        }, dadosNivel[nivel].tempoLeitura * 1000)
     }
 
-    function selecionarCartao(icone) {
-        if (cartoesSelecionados.length == 1) {
-            if (cartoesSelecionados[0] == icone) {
-                setAcertos(a => a + 1)
-            } else {
-                setErros(e => e + 1)
+    async function selecionarCartao(indiceAtual) {
+        setTimeout(() => {
+            if (ultimoIndiceSelecionado === indiceAtual) {
+                setUltimoIndiceSelecionado(undefined);
+                return;
             }
-            setCartoesSelecionados([])
-        } else {
-            setCartoesSelecionados([icone])
-        }
+            if (!isNaN(ultimoIndiceSelecionado)) {
+                if (cartoes[ultimoIndiceSelecionado].icone === cartoes[indiceAtual].icone) {
+                    setAcertos(a => a + 1)
+                    itemsRef.current[ultimoIndiceSelecionado].alterarBloqueio();
+                    itemsRef.current[indiceAtual].alterarBloqueio();
+                    document.getElementById("sucesso").play()
+                } else {
+                    itemsRef.current[ultimoIndiceSelecionado].virarCartao();
+                    itemsRef.current[indiceAtual].virarCartao();
+                    setErros(e => e + 1)
+                    document.getElementById("erro").play()
+                }
+                setUltimoIndiceSelecionado(undefined);
+            } else {
+                setUltimoIndiceSelecionado(indiceAtual)
+            }
+        }, 250)
     }
 
-    function alterarStatusCartoes() {
-        itemsRef.current.forEach(ref => (ref.virarCartao()))
+    function virarCartoes() {
+        itemsRef.current.forEach(ref => {
+            ref.virarCartao()
+        })
+    }
+
+    function bloquearCartoes() {
+        itemsRef.current.forEach(ref => {
+            ref.alterarBloqueio();
+        })
     }
 
 
@@ -93,20 +138,31 @@ export default function Jogo() {
             <Container fluid>
                 <Row>
                     <Col className="justify-content-md-center text-center">
-                        <Button className="m-2" size="lg" onClick={() => iniciar()}>
-                            <i className="bi-play"></i>  Iniciar
+                        <Button className="m-2" size="lg" onClick={iniciar} style={{ display: !iniciou ? 'unset' : 'none' }}>
+                            <i className="bi-play"></i> Iniciar
                         </Button>
+                        <Cronometro ref={el => refCronometro.current = el} />
+                    </Col>
+                </Row>
+                <Row style={{ display: iniciou ? 'flex' : 'none', justifyContent: 'space-around' }}>
+                    <Col className="justify-content-md-center text-center">
+                        <div className="m-1">
+                            <i className="bi-x-circle" style={{ fontSize: 20, color: "red" }}></i> <span style={{ fontSize: 20, color: "red" }}>{erros}</span>
+                        </div>
+                        <div className="m-1">
+                            <i className="bi-check-circle" style={{ fontSize: 20, color: "green" }}></i>  <span style={{ fontSize: 20, color: "green" }}>{acertos}</span>
+                        </div>
                     </Col>
                 </Row>
                 <Row className="p-5">
                     {cartoes.length > 0 ?
                         cartoes.map((cartao, indice) => {
                             return (
-                                <Col className="p-1" key={indice} >
+                                <Col className="p-1 d-flex justify-content-center" key={indice} >
                                     <Cartao
                                         cor={cartao.cor}
                                         icone={cartao.icone}
-                                        selecionarCartao={selecionarCartao}
+                                        selecionarCartao={() => selecionarCartao(indice)}
                                         ref={el => itemsRef.current[indice] = el}
                                     />
                                 </Col>
@@ -114,16 +170,21 @@ export default function Jogo() {
                         })
                         : <Spinner />}
                 </Row>
-                <Row>
-                    <Col className="justify-content-md-center text-center">
-                        <Col>
-                            <i className="bi-x-circle" style={{ fontSize: 20, color: "red" }}></i> <span style={{ fontSize: 20, color: "red" }}>{erros}</span>
-                        </Col>
-                        <Col>
-                            <i className="bi-check-circle" style={{ fontSize: 20, color: "green" }}></i>  <span style={{ fontSize: 20, color: "green" }}>{acertos}</span>
-                        </Col>
-                    </Col>
-                </Row>
+
+                <Modal show={pontuacao != null} centered data-bs-theme="dark">
+                    <Modal.Header>
+                        <Modal.Title className="text-light">Parabéns!! Você completou o desafio</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body className="text-light">
+                        Você atingiu <strong> {pontuacao}</strong> pontos.
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button>Abrir Ranking</Button>
+                    </Modal.Footer>
+                </Modal>
+                <audio src={Sucesso} id="sucesso" />
+                <audio src={Erro} id="erro" />
+                <audio src={Encerramento} id="encerramento" />
             </Container>
         </>
     );
