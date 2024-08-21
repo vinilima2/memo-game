@@ -18,3 +18,30 @@ export const cartas = [
     {icone:'bicycle', cor:'black'},
     {icone:'train-front-fill', cor:'gray'},
 ]
+
+export const dadosNivel = {
+    facil: {
+        quantidadeCartas: 3,
+        tempoLeitura: 5,
+        tempoDesafio: 10,
+        pesoAcerto: 1,
+        pesoErro: 0.5,
+        bonus: 0.5
+    },
+    medio: {
+        quantidadeCartas: 6,
+        tempoLeitura: 10,
+        tempoDesafio: 10,
+        pesoAcerto: 2,
+        pesoErro: 1,
+        bonus: 0.8
+    },
+    dificil: {
+        quantidadeCartas: 9,
+        tempoLeitura: 15,
+        tempoDesafio: 10,
+        pesoAcerto: 3,
+        pesoErro: 1,
+        bonus: 1
+    }
+}

@@ -11,26 +11,28 @@ export default function ModalDificuldade() {
     return (
         <>
             <Modal.Header>
-                <Modal.Title>Selecione a dificuldade</Modal.Title>
+                <Modal.Title className="text-light">Selecione a dificuldade</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Container>
-                    <Row>
-                        <Col>
-                            <Button className="m-2" size="md" variant="success" onClick={() => navegarParaJogo('facil')}>
+                    <Row className="justify-content-space-around">
+                        <div className="d-grid gap-2">
+
+                            <Button size="lg" variant="success" onClick={() => navegarParaJogo('facil')}>
                                 <i className="bi-reception-1"></i> Fácil
                             </Button>
-                        </Col>
-                        <Col>
-                            <Button className="m-2" size="md" variant="warning" onClick={() => navegarParaJogo('medio')}>
+
+
+                            <Button size="lg" variant="warning" onClick={() => navegarParaJogo('medio')}>
                                 <i className="bi-reception-2"></i> Médio
                             </Button>
-                        </Col>
-                        <Col>
-                            <Button className="m-2" size="md" variant="danger" onClick={() => navegarParaJogo('dificil')}>
+
+
+                            <Button size="lg" variant="danger" onClick={() => navegarParaJogo('dificil')}>
                                 <i className="bi-reception-4"></i> Difícil
                             </Button>
-                        </Col>
+
+                        </div>
                     </Row>
                 </Container>
             </Modal.Body>

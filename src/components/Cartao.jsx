@@ -1,15 +1,20 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { Card } from "react-bootstrap";
 
-const Cartao = forwardRef(function Cartao(props, ref) {
+const Cartao = forwardRef(function (props, ref) {
     const { icone, cor, selecionarCartao } = props;
     const [exibir, setExibir] = useState(false)
-    const [bloquear, setBloquear] = useState(false)
+    const [bloquear, setBloquear] = useState(true)
+
+    useImperativeHandle(ref, () => ({
+        virarCartao,
+        alterarBloqueio
+    }))
 
     function selecionar() {
         if (bloquear) return;
         virarCartao()
-        selecionarCartao(icone)
+        selecionarCartao()
     }
 
     function alterarBloqueio() {
@@ -17,23 +22,25 @@ const Cartao = forwardRef(function Cartao(props, ref) {
     }
 
     function virarCartao() {
-        ref.current.classList.toggle('flip')
-        setTimeout(() => {
-            setExibir(!exibir)
-            ref.current.classList.toggle('flip')
-        }, 500)
+        setExibir(!exibir)
+        alterarCSS()
     }
 
-    useImperativeHandle(ref, () => ({
-        virarCartao
-    }))
+
+    function alterarCSS() {
+        if (ref.current.style.transform === 'rotateY(180deg)') {
+            ref.current.style.transform = 'rotateY(0deg)';
+        } else {
+            ref.current.style.transform = 'rotateY(180deg)';
+        }
+    }
 
 
     return (
-        <Card ref={r => ref.current = r} onClick={selecionar} style={{ height: '200px', width: '200px' }} className={"text-center"} >
+        <Card ref={r => ref.current = r} onClick={selecionar} className={"text-center align-items-center flip"} >
             <Card.Body>
                 {
-                    <i className={`bi-${exibir ? icone : 'question-circle'}`} style={{ color: exibir ? cor : 'gray', fontSize: 120 }}></i>
+                    <i className={`icon bi-${exibir ? icone : 'question-circle'}`} style={{ color: exibir ? cor : 'gray' }}></i>
                 }
             </Card.Body>
         </Card>
