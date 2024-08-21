@@ -12,7 +12,7 @@ export default function Inicio() {
     return (
         <Container fluid className="p-5">
             <Row className="justify-content-md-center text-center p-5 bg-blue">
-                <Col>
+                <Col className="d-flex justify-content-center" md="auto" sm="auto" lg="auto">
                     <Logo/>
                 </Col>
             </Row>
@@ -33,7 +33,7 @@ export default function Inicio() {
                 </Col>
             </Row>
 
-            <Modal show={show} onHide={fecharModal} centered>
+            <Modal show={show} size="lg" onHide={fecharModal} centered animation data-bs-theme="dark">
                 <ModalDificuldade />
             </Modal>
         </Container>
