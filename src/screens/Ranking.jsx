@@ -3,6 +3,7 @@ import RankingList from "../components/RankingList/RankingList";
 import { buscarRanking, tipoRankingType } from "../utils/ranking";
 import Loading from "../components/Loading/Loading";
 import { useParams } from "react-router-dom";
+import RankingButtons from "../components/RankingButtons/RankingButtons";
 
 export default function Ranking() {
   const { tipo } = useParams();
@@ -25,7 +26,10 @@ export default function Ranking() {
       {loading ? 
         <Loading/>
       : 
-        <RankingList usersList={usersList} />
+        <>
+          <RankingList usersList={usersList} tipoRanking={tipoRanking}/>
+          <RankingButtons tipoRanking={tipoRanking}/>
+        </>
       }
     </main>
   );
