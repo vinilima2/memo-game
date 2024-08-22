@@ -13,7 +13,7 @@ export const routes = createBrowserRouter([
         element: (<Jogo />)
     },
     {
-        path: "/ranking",
+        path: "/ranking/:tipo",
         element: (<Ranking />)
     }
 ]);
