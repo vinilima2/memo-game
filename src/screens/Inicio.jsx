@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, Col, Container, Row, Image, Modal, Form } from "react-bootstrap";
+import {useState} from "react";
+import {Button, Col, Container, Row, Modal, Form} from "react-bootstrap";
 import ModalDificuldade from "../components/ModalDificuldade";
 import Logo from "../components/Logo";
 

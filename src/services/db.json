@@ -1,0 +1,82 @@
+{
+  "cartas": [
+    {
+      "icone": "star-fill",
+      "cor": "yellow"
+    },
+    {
+      "icone": "moon-fill",
+      "cor": "gray"
+    },
+    {
+      "icone": "flower1",
+      "cor": "red"
+    },
+    {
+      "icone": "heart-fill",
+      "cor": "red"
+    },
+    {
+      "icone": "cup-straw",
+      "cor": "lightblue"
+    },
+    {
+      "icone": "tree-fill",
+      "cor": "green"
+    },
+    {
+      "icone": "fire",
+      "cor": "red"
+    },
+    {
+      "icone": "droplet-fill",
+      "cor": "lightblue"
+    },
+    {
+      "icone": "watch",
+      "cor": "black"
+    },
+    {
+      "icone": "balloon-fill",
+      "cor": "yellow"
+    },
+    {
+      "icone": "truck-front-fill",
+      "cor": "gray"
+    },
+    {
+      "icone": "car-front-fill",
+      "cor": "gray"
+    },
+    {
+      "icone": "airplane-fill",
+      "cor": "gray"
+    },
+    {
+      "icone": "scissors",
+      "cor": "gray"
+    },
+    {
+      "icone": "pencil-fill",
+      "cor": "red"
+    },
+    {
+      "icone": "mouse2-fill",
+      "cor": "lightblue"
+    },
+    {
+      "icone": "bicycle",
+      "cor": "black"
+    },
+    {
+      "icone": "train-front-fill",
+      "cor": "gray"
+    }
+  ],
+  "usuarios": [
+    {
+      "id": "242345345",
+      "nome": "Juan Almeida dos Santos"
+    }
+  ]
+}

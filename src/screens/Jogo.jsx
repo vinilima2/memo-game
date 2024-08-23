@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { cartas, dadosNivel } from "../mocks/dados";
+import { dadosNivel } from "../mocks/dados";
 import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import Cartao from "../components/Cartao";
 import Cronometro from "../components/Cronometro";
 import Sucesso from "../assets/sucesso.mp3"
 import Erro from "../assets/erro.mp3"
 import Encerramento from "../assets/encerramento.mp3"
-
+import {buscarCartas} from "../services/api.js";
 
 
 export default function Jogo() {
@@ -51,8 +51,8 @@ export default function Jogo() {
         }
     }, [acertos])
 
-    function gerarCartoes(quantidade) {
-        const cartoesPadrao = cartas
+    async function gerarCartoes(quantidade) {
+        const cartoesPadrao = await buscarCartas()
         let cartoesEscolhidos = []
         while (cartoesEscolhidos.length !== quantidade) {
             let posicao = Math.floor((Math.random() * cartoesPadrao.length) + 1)
