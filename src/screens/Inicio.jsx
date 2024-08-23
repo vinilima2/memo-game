@@ -27,7 +27,7 @@ export default function Inicio() {
                         <i className="bi-dice-1-fill"></i>  Novo Jogo
                     </Button>
 
-                    <Button className="m-2" size="lg">
+                    <Button href="/ranking" className="m-2" size="lg">
                         <i className="bi-trophy-fill"></i> Ranking
                     </Button>
                 </Col>
