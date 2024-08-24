@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
-import { cartas, dadosNivel } from "../mocks/dados";
-import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
+import {useState, useEffect, useRef} from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import {cartas, dadosNivel} from "../mocks/dados";
+import {Button, Col, Container, Modal, Row, Spinner} from "react-bootstrap";
 import Cartao from "../components/Cartao";
 import Cronometro from "../components/Cronometro";
 import Sucesso from "../assets/sucesso.mp3"
@@ -9,9 +9,9 @@ import Erro from "../assets/erro.mp3"
 import Encerramento from "../assets/encerramento.mp3"
 
 
-
 export default function Jogo() {
-    const { nivel } = useParams();
+    const {nivel} = useParams();
+    const navigate = useNavigate()
 
     const itemsRef = useRef([]);
     const refCronometro = useRef(null);
@@ -27,12 +27,14 @@ export default function Jogo() {
     const [finalizou, setFinalizou] = useState(false)
 
     useEffect(() => {
+        if (!nivel) navigate("/inicio")
+        compararNivel(nivel)
+    }, [])
+
+    useEffect(() => {
         itemsRef.current = itemsRef.current.slice(0, cartoes.length);
     }, [cartoes]);
 
-    useEffect(() => {
-        compararNivel(nivel)
-    }, [])
 
     useEffect(() => {
         if (iniciou)
@@ -148,28 +150,31 @@ export default function Jogo() {
             <Container fluid>
                 <Row>
                     <Col className="justify-content-md-center text-center">
-                        <Button className="m-2" size="lg" onClick={iniciar} style={{ display: !iniciou ? 'unset' : 'none' }}>
+                        <Button className="m-2" size="lg" onClick={iniciar}
+                                style={{display: !iniciou ? 'unset' : 'none'}}>
                             <i className="bi-play"></i> Iniciar
                         </Button>
-                        <Cronometro ref={el => refCronometro.current = el} />
+                        <Cronometro ref={el => refCronometro.current = el}/>
                     </Col>
                 </Row>
-                <Row style={{ display: iniciou ? 'flex' : 'none', justifyContent: 'center' }}>
+                <Row style={{display: iniciou ? 'flex' : 'none', justifyContent: 'center'}}>
                     <Col className="text-center  m-1" md="1" lg="1" sm="1">
                         <i className="bi-x-circle text-danger h6"></i> <span className="text-danger h6">{erros}</span>
                     </Col>
                     <Col className="text-center m-1" md="1" lg="1" sm="1">
-                        <i className="bi-check-circle text-success h6"></i> <span className="text-success h6">{acertos}</span>
+                        <i className="bi-check-circle text-success h6"></i> <span
+                        className="text-success h6">{acertos}</span>
                     </Col>
                     <Col className="text-center m-1" md="1" lg="1" sm="1">
-                        <i className="bi-trophy-fill text-info h6"></i> <span className="text-info h6">{pontuacao}</span>
+                        <i className="bi-trophy-fill text-info h6"></i> <span
+                        className="text-info h6">{pontuacao}</span>
                     </Col>
                 </Row>
                 <Row className="p-5">
                     {cartoes.length > 0 ?
                         cartoes.map((cartao, indice) => {
                             return (
-                                <Col className="p-1 d-flex justify-content-center" key={indice} >
+                                <Col className="p-1 d-flex justify-content-center" key={indice}>
                                     <Cartao
                                         cor={cartao.cor}
                                         icone={cartao.icone}
@@ -179,7 +184,7 @@ export default function Jogo() {
                                 </Col>
                             )
                         })
-                        : <Spinner />}
+                        : <Spinner/>}
                 </Row>
 
                 <Modal show={finalizou} centered data-bs-theme="dark">
@@ -193,9 +198,9 @@ export default function Jogo() {
                         <Button>Abrir Ranking</Button>
                     </Modal.Footer>
                 </Modal>
-                <audio src={Sucesso} id="sucesso" />
-                <audio src={Erro} id="erro" />
-                <audio src={Encerramento} id="encerramento" />
+                <audio src={Sucesso} id="sucesso"/>
+                <audio src={Erro} id="erro"/>
+                <audio src={Encerramento} id="encerramento"/>
             </Container>
         </>
     );

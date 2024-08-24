@@ -4,11 +4,13 @@ body {
 
 .logo {
     font-size: 120px;
-    padding: auto;
+    text-align: center;
     background: #ff914d;
     width: 170px;
     height: 170px;
     animation: animacao-logo 5s infinite;
+    margin: 10px auto;
+    border-radius: 10px;
 }
 
 .logo * {
