@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+
+.ranking-page {
+  color: #fff;
+
+  .ranking-list-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+    h1 {
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    .ranking-list-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ranking-item {
+        border-radius: 7px;
+        background: #212529;
+        justify-content: space-between;
+        width: 550px;
+        height: 83px;
+        padding: 0 15px;
+        font-size: 20px;
+
+        .ranking-item-left-content{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            .ranking-item-rank{
+                font-family: 'Lilita One';
+                width: 55px;
+                text-align: center;
+                font-size: 32px;
+            }
+
+        }
+
+        .ranking-item-right-content{
+        }
+    }
+  }
+}

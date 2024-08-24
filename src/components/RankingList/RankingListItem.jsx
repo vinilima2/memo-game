@@ -2,17 +2,28 @@ import { Stack } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { tipoRankingType } from "../../utils/ranking";
 
-const RankingListItem = ({ user = { nome: "", pontos: 0 }, ranking, tipoRanking }) => {
+const RankingListItem = ({
+  user = { nome: "", pontos: 0 },
+  ranking,
+  tipoRanking,
+}) => {
   return (
-    <Stack direction="horizontal" className="px-5 py-4 rounded-2 mw-50 justify-content-between" style={{background: '#444'}}>
-      <span style={{fontSize: '1.4rem', width: '50px'}}>{ranking}</span>
-      {
-        tipoRanking == tipoRankingType.GLOBAL ?
-          <span style={{fontSize: '1.5rem'}}>{user.nome}</span>
-          :
-          null
-      }
-      <span style={{fontSize: '1.5rem', width: '50px', textAlign: 'right'}}>{user.pontos}</span>
+    <Stack direction="horizontal" className="ranking-item">
+      <div className="ranking-item-left-content">
+        <div className="ranking-item-rank">
+          {ranking}
+        </div>
+
+        {tipoRanking == tipoRankingType.GLOBAL ? (
+          <span className="nome">{user.nome}</span>
+        ) : null}
+      </div>
+
+      <span
+        className="ranking-item-right-content"
+      >
+        {user.pontos} pts
+      </span>
     </Stack>
   );
 };
