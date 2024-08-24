@@ -1,6 +1,6 @@
 export const cartas = [
     {icone:'star-fill', cor:'yellow'},
-    {icone:'moon-fill', cor:'gray'},
+    {icone:'moon-fill', cor:'darkgray'},
     {icone:'flower1', cor:'red'},
     {icone:'heart-fill', cor:'red'},
     {icone:'cup-straw', cor:'lightblue'},
@@ -9,14 +9,14 @@ export const cartas = [
     {icone:'droplet-fill', cor:'lightblue'},
     {icone:'watch', cor:'black'},
     {icone:'balloon-fill', cor:'yellow'},
-    {icone:'truck-front-fill', cor:'gray'},
-    {icone:'car-front-fill', cor:'gray'},
-    {icone:'airplane-fill', cor:'gray'},
-    {icone:'scissors', cor:'gray'},
+    {icone:'truck-front-fill', cor:'darkgray'},
+    {icone:'car-front-fill', cor:'darkgray'},
+    {icone:'airplane-fill', cor:'darkgray'},
+    {icone:'scissors', cor:'darkgray'},
     {icone:'pencil-fill', cor:'red'},
     {icone:'mouse2-fill', cor:'lightblue'},
     {icone:'bicycle', cor:'black'},
-    {icone:'train-front-fill', cor:'gray'},
+    {icone:'train-front-fill', cor:'darkgray'},
 ]
 
 export const dadosNivel = {
@@ -31,7 +31,7 @@ export const dadosNivel = {
     medio: {
         quantidadeCartas: 6,
         tempoLeitura: 10,
-        tempoDesafio: 10,
+        tempoDesafio: 15,
         pesoAcerto: 2,
         pesoErro: 1,
         bonus: 0.8

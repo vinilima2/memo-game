@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { dadosNivel } from "../mocks/dados";
 import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import Cartao from "../components/Cartao";
@@ -11,23 +11,31 @@ import {buscarCartas} from "../services/api.js";
 
 
 export default function Jogo() {
-    const { nivel } = useParams();
-    const [cartoes, setCartoes] = useState([])
+    const {nivel} = useParams();
+    const navigate = useNavigate()
+
     const itemsRef = useRef([]);
     const refCronometro = useRef(null);
+
+    const [cartoes, setCartoes] = useState([])
     const [ultimoIndiceSelecionado, setUltimoIndiceSelecionado] = useState(undefined)
+
     const [acertos, setAcertos] = useState(0)
     const [erros, setErros] = useState(0)
+    const [pontuacao, setPontuacao] = useState(0)
+
     const [iniciou, setIniciou] = useState(false)
-    const [pontuacao, setPontuacao] = useState(null)
+    const [finalizou, setFinalizou] = useState(false)
+
+    useEffect(() => {
+        if (!nivel) navigate("/inicio")
+        compararNivel(nivel)
+    }, [])
 
     useEffect(() => {
         itemsRef.current = itemsRef.current.slice(0, cartoes.length);
     }, [cartoes]);
 
-    useEffect(() => {
-        compararNivel(nivel)
-    }, [])
 
     useEffect(() => {
         if (iniciou)
@@ -43,13 +51,15 @@ export default function Jogo() {
     }
 
     useEffect(() => {
+        let tempoRestante = 0;
         if (acertos === dadosNivel[nivel].quantidadeCartas) {
-            const tempoRestante = refCronometro.current.pararCronometro()
+            tempoRestante = refCronometro.current.pararCronometro()
             document.getElementById("encerramento").play()
-            const total = (acertos * dadosNivel[nivel].pesoAcerto) - (erros * dadosNivel[nivel].pesoErro) + (tempoRestante * dadosNivel[nivel].bonus)
-            setPontuacao(total)
+            setFinalizou(true)
         }
-    }, [acertos])
+        const total = (acertos * dadosNivel[nivel].pesoAcerto) - (erros * dadosNivel[nivel].pesoErro) + (tempoRestante * dadosNivel[nivel].bonus)
+        setPontuacao(total)
+    }, [acertos,])
 
     async function gerarCartoes(quantidade) {
         const cartoesPadrao = await buscarCartas()
@@ -87,17 +97,19 @@ export default function Jogo() {
         setIniciou(true)
         virarCartoes()
         refCronometro.current.iniciarCronometro(dadosNivel[nivel].tempoLeitura)
-        setTimeout(() => {
+        const timeoutID = setTimeout(() => {
             virarCartoes()
             bloquearCartoes()
             refCronometro.current.pararCronometro()
             refCronometro.current.iniciarCronometro(dadosNivel[nivel].tempoDesafio)
+            clearTimeout(timeoutID)
         }, dadosNivel[nivel].tempoLeitura * 1000)
     }
 
     async function selecionarCartao(indiceAtual) {
-        setTimeout(() => {
+        const timeoutID = setTimeout(() => {
             if (ultimoIndiceSelecionado === indiceAtual) {
+                itemsRef.current[indiceAtual].virarCartao();
                 setUltimoIndiceSelecionado(undefined);
                 return;
             }
@@ -117,6 +129,7 @@ export default function Jogo() {
             } else {
                 setUltimoIndiceSelecionado(indiceAtual)
             }
+            clearTimeout(timeoutID)
         }, 250)
     }
 
@@ -138,27 +151,31 @@ export default function Jogo() {
             <Container fluid>
                 <Row>
                     <Col className="justify-content-md-center text-center">
-                        <Button className="m-2" size="lg" onClick={iniciar} style={{ display: !iniciou ? 'unset' : 'none' }}>
+                        <Button className="m-2" size="lg" onClick={iniciar}
+                                style={{display: !iniciou ? 'unset' : 'none'}}>
                             <i className="bi-play"></i> Iniciar
                         </Button>
-                        <Cronometro ref={el => refCronometro.current = el} />
+                        <Cronometro ref={el => refCronometro.current = el}/>
                     </Col>
                 </Row>
-                <Row style={{ display: iniciou ? 'flex' : 'none', justifyContent: 'space-around' }}>
-                    <Col className="justify-content-md-center text-center">
-                        <div className="m-1">
-                            <i className="bi-x-circle" style={{ fontSize: 20, color: "red" }}></i> <span style={{ fontSize: 20, color: "red" }}>{erros}</span>
-                        </div>
-                        <div className="m-1">
-                            <i className="bi-check-circle" style={{ fontSize: 20, color: "green" }}></i>  <span style={{ fontSize: 20, color: "green" }}>{acertos}</span>
-                        </div>
+                <Row style={{display: iniciou ? 'flex' : 'none', justifyContent: 'center'}}>
+                    <Col className="text-center  m-1" md="1" lg="1" sm="1">
+                        <i className="bi-x-circle text-danger h6"></i> <span className="text-danger h6">{erros}</span>
+                    </Col>
+                    <Col className="text-center m-1" md="1" lg="1" sm="1">
+                        <i className="bi-check-circle text-success h6"></i> <span
+                        className="text-success h6">{acertos}</span>
+                    </Col>
+                    <Col className="text-center m-1" md="1" lg="1" sm="1">
+                        <i className="bi-trophy-fill text-info h6"></i> <span
+                        className="text-info h6">{pontuacao}</span>
                     </Col>
                 </Row>
                 <Row className="p-5">
                     {cartoes.length > 0 ?
                         cartoes.map((cartao, indice) => {
                             return (
-                                <Col className="p-1 d-flex justify-content-center" key={indice} >
+                                <Col className="p-1 d-flex justify-content-center" key={indice}>
                                     <Cartao
                                         cor={cartao.cor}
                                         icone={cartao.icone}
@@ -168,10 +185,10 @@ export default function Jogo() {
                                 </Col>
                             )
                         })
-                        : <Spinner />}
+                        : <Spinner/>}
                 </Row>
 
-                <Modal show={pontuacao != null} centered data-bs-theme="dark">
+                <Modal show={finalizou} centered data-bs-theme="dark">
                     <Modal.Header>
                         <Modal.Title className="text-light">Parabéns!! Você completou o desafio</Modal.Title>
                     </Modal.Header>
@@ -182,9 +199,9 @@ export default function Jogo() {
                         <Button>Abrir Ranking</Button>
                     </Modal.Footer>
                 </Modal>
-                <audio src={Sucesso} id="sucesso" />
-                <audio src={Erro} id="erro" />
-                <audio src={Encerramento} id="encerramento" />
+                <audio src={Sucesso} id="sucesso"/>
+                <audio src={Erro} id="erro"/>
+                <audio src={Encerramento} id="encerramento"/>
             </Container>
         </>
     );

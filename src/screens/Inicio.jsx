@@ -11,16 +11,6 @@ export default function Inicio() {
 
     return (
         <Container fluid className="p-5">
-            <Row className="justify-content-md-center text-center p-5 bg-blue">
-                <Col className="d-flex justify-content-center" md="auto" sm="auto" lg="auto">
-                    <Logo/>
-                </Col>
-            </Row>
-            <Row className="justify-content-md-center text-center p-5">
-                <Col md="auto">
-                     <Form.Control aria-label="First name" placeholder="Nome do usuário" />
-                </Col>
-            </Row>
             <Row className="justify-content-md-center p-5" >
                 <Col className="justify-content-md-center text-center">
                     <Button className="m-2" size="lg" onClick={abrirModal}>
