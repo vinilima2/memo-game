@@ -12,14 +12,19 @@ import Encerramento from "../assets/encerramento.mp3"
 
 export default function Jogo() {
     const { nivel } = useParams();
-    const [cartoes, setCartoes] = useState([])
+
     const itemsRef = useRef([]);
     const refCronometro = useRef(null);
+
+    const [cartoes, setCartoes] = useState([])
     const [ultimoIndiceSelecionado, setUltimoIndiceSelecionado] = useState(undefined)
+
     const [acertos, setAcertos] = useState(0)
     const [erros, setErros] = useState(0)
+    const [pontuacao, setPontuacao] = useState(0)
+
     const [iniciou, setIniciou] = useState(false)
-    const [pontuacao, setPontuacao] = useState(null)
+    const [finalizou, setFinalizou] = useState(false)
 
     useEffect(() => {
         itemsRef.current = itemsRef.current.slice(0, cartoes.length);
@@ -43,13 +48,15 @@ export default function Jogo() {
     }
 
     useEffect(() => {
+        let tempoRestante = 0;
         if (acertos === dadosNivel[nivel].quantidadeCartas) {
-            const tempoRestante = refCronometro.current.pararCronometro()
+            tempoRestante = refCronometro.current.pararCronometro()
             document.getElementById("encerramento").play()
-            const total = (acertos * dadosNivel[nivel].pesoAcerto) - (erros * dadosNivel[nivel].pesoErro) + (tempoRestante * dadosNivel[nivel].bonus)
-            setPontuacao(total)
+            setFinalizou(true)
         }
-    }, [acertos])
+        const total = (acertos * dadosNivel[nivel].pesoAcerto) - (erros * dadosNivel[nivel].pesoErro) + (tempoRestante * dadosNivel[nivel].bonus)
+        setPontuacao(total)
+    }, [acertos,])
 
     function gerarCartoes(quantidade) {
         const cartoesPadrao = cartas
@@ -147,14 +154,15 @@ export default function Jogo() {
                         <Cronometro ref={el => refCronometro.current = el} />
                     </Col>
                 </Row>
-                <Row style={{ display: iniciou ? 'flex' : 'none', justifyContent: 'space-around' }}>
-                    <Col className="justify-content-md-center text-center">
-                        <div className="m-1">
-                            <i className="bi-x-circle" style={{ fontSize: 20, color: "red" }}></i> <span style={{ fontSize: 20, color: "red" }}>{erros}</span>
-                        </div>
-                        <div className="m-1">
-                            <i className="bi-check-circle" style={{ fontSize: 20, color: "green" }}></i>  <span style={{ fontSize: 20, color: "green" }}>{acertos}</span>
-                        </div>
+                <Row style={{ display: iniciou ? 'flex' : 'none', justifyContent: 'center' }}>
+                    <Col className="text-center  m-1" md="1" lg="1" sm="1">
+                        <i className="bi-x-circle text-danger h6"></i> <span className="text-danger h6">{erros}</span>
+                    </Col>
+                    <Col className="text-center m-1" md="1" lg="1" sm="1">
+                        <i className="bi-check-circle text-success h6"></i> <span className="text-success h6">{acertos}</span>
+                    </Col>
+                    <Col className="text-center m-1" md="1" lg="1" sm="1">
+                        <i className="bi-trophy-fill text-info h6"></i> <span className="text-info h6">{pontuacao}</span>
                     </Col>
                 </Row>
                 <Row className="p-5">
@@ -174,7 +182,7 @@ export default function Jogo() {
                         : <Spinner />}
                 </Row>
 
-                <Modal show={pontuacao != null} centered data-bs-theme="dark">
+                <Modal show={finalizou} centered data-bs-theme="dark">
                     <Modal.Header>
                         <Modal.Title className="text-light">Parabéns!! Você completou o desafio</Modal.Title>
                     </Modal.Header>
