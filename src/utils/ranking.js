@@ -8,17 +8,27 @@ export const buscarRanking = async (tipoRanking) => {
 
     if (tipoRanking === tipoRankingType.GLOBAL) {
         retorno = await Promise.resolve([
-            { nome: 'Alice', pontos: 100 },
-            { nome: 'Bob', pontos: 90 },
-            { nome: 'Carol', pontos: 80 }
+            { nome: 'Eduardo Valencio', pontos: 2345 },
+            { nome: 'Vinicius Lima', pontos: 3456 },
+            { nome: 'Thomas Pinheiro', pontos: 4567 },
+            { nome: 'Danilo Yoshilly', pontos: 5678 },
+            { nome: 'Kamily Oliveira', pontos: 6789 },
+            { nome: 'Luiz Gustavo', pontos: 7890 },
+            { nome: 'Sonic vs Mario', pontos: 8901 },
         ]);
-    }else{
+    } else {
         retorno = await Promise.resolve([
-            { nome: 'Alice', pontos: 100 },
-            { nome: 'Bob', pontos: 90 },
-            { nome: 'Carol', pontos: 80 }
+            { nome: 'Vinicius Lima', pontos: 123 },
+            { nome: 'Vinicius Lima', pontos: 234 },
+            { nome: 'Vinicius Lima', pontos: 345 },
+            { nome: 'Vinicius Lima', pontos: 456 },
+            { nome: 'Vinicius Lima', pontos: 567 },
+            { nome: 'Vinicius Lima', pontos: 678 },
+            { nome: 'Vinicius Lima', pontos: 789 },
+            { nome: 'Vinicius Lima', pontos: 890 },
+            { nome: 'Vinicius Lima', pontos: 901 },
+            { nome: 'Vinicius Lima', pontos: 1012 },
         ]);
-
     }
 
     ordenarRanking(retorno);
