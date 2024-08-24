@@ -13,7 +13,6 @@ const RankingList = ({ usersList, tipoRanking }) => {
       )}
       <div
         className="ranking-list-content"
-        style={{ gap: "20px" }}
       >
         {usersList.map((user, index) => (
           <RankingListItem
