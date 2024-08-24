@@ -87,17 +87,19 @@ export default function Jogo() {
         setIniciou(true)
         virarCartoes()
         refCronometro.current.iniciarCronometro(dadosNivel[nivel].tempoLeitura)
-        setTimeout(() => {
+        const timeoutID = setTimeout(() => {
             virarCartoes()
             bloquearCartoes()
             refCronometro.current.pararCronometro()
             refCronometro.current.iniciarCronometro(dadosNivel[nivel].tempoDesafio)
+            clearTimeout(timeoutID)
         }, dadosNivel[nivel].tempoLeitura * 1000)
     }
 
     async function selecionarCartao(indiceAtual) {
-        setTimeout(() => {
+        const timeoutID = setTimeout(() => {
             if (ultimoIndiceSelecionado === indiceAtual) {
+                itemsRef.current[indiceAtual].virarCartao();
                 setUltimoIndiceSelecionado(undefined);
                 return;
             }
@@ -117,6 +119,7 @@ export default function Jogo() {
             } else {
                 setUltimoIndiceSelecionado(indiceAtual)
             }
+            clearTimeout(timeoutID)
         }, 250)
     }
 
