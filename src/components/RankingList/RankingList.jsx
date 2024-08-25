@@ -1,10 +1,28 @@
 import RankingListItem from "./RankingListItem";
 import PropTypes from "prop-types";
 import { Stack } from "react-bootstrap";
-import { tipoRankingType } from "../../utils/ranking";
+import { buscarMaiorRankUsuario, tipoRankingType } from "../../utils/ranking";
 import ImagemTrofeu from "../../assets/ranking/trofeu.png";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { TokenContext } from "../../main";
 
 const RankingList = ({ usersList, tipoRanking }) => {
+  const {usuario} = useContext(TokenContext);
+  const [userGlobalRank, setUserGlobalRank] = useState(null);
+
+  const usuarioEstaNoTop10 = useMemo(() => {
+    console.log(usersList)
+    console.log(userGlobalRank)
+    // OBS: Só vai funcionar se o nome for único
+    return usersList.some((user) => user.nome === usuario.nome);
+  }, [usersList, userGlobalRank, usuario]);
+
+  useEffect(() => {
+    buscarMaiorRankUsuario(usuario).then((userTopRank) => {
+      setUserGlobalRank(userTopRank);
+    });
+  }, [usuario])
+
   return (
     <Stack className="ranking-list-container">
       <Stack className="ranking-list-header" direction="vertical">
@@ -26,10 +44,18 @@ const RankingList = ({ usersList, tipoRanking }) => {
           <RankingListItem
             key={`${index}-${user.pontos}`}
             user={user}
-            ranking={index + 1}
             tipoRanking={tipoRanking}
+            usuarioLogado={user.nome === usuario.nome}
           />
         ))}
+        {!usuarioEstaNoTop10 && tipoRanking == tipoRankingType.GLOBAL && userGlobalRank ?
+        (
+          <RankingListItem
+            user={userGlobalRank}
+            tipoRanking={tipoRanking}
+            usuarioLogado
+          />
+        ) : null}
       </div>
     </Stack>
   );

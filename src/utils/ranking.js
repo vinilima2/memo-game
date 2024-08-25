@@ -1,38 +1,27 @@
 // Implementação provisória de métodos e requisição para exibição do ranking
 
+import { dadosUsuarioMaiorPontuacaoRankingGlobal, historicoPontosUsuarioTop10, rankingGlobalTop10 } from "../mocks/dados";
+
 // Requisitar informações do ranking
-export const buscarRanking = async (tipoRanking) => {
+export const buscarRanking = async (tipoRanking, usuario) => {
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     let retorno;
 
     if (tipoRanking === tipoRankingType.GLOBAL) {
-        retorno = await Promise.resolve([
-            { nome: 'Eduardo Valencio', pontos: 2345 },
-            { nome: 'Vinicius Lima', pontos: 3456 },
-            { nome: 'Thomas Pinheiro', pontos: 4567 },
-            { nome: 'Danilo Yoshilly', pontos: 5678 },
-            { nome: 'Kamily Oliveira', pontos: 6789 },
-            { nome: 'Luiz Gustavo', pontos: 7890 },
-            { nome: 'Sonic vs Mario', pontos: 8901 },
-        ]);
+        // TODO: Implementar consulta aqui
+        retorno = await Promise.resolve(rankingGlobalTop10);
     } else {
-        retorno = await Promise.resolve([
-            { nome: 'Vinicius Lima', pontos: 123 },
-            { nome: 'Vinicius Lima', pontos: 234 },
-            { nome: 'Vinicius Lima', pontos: 345 },
-            { nome: 'Vinicius Lima', pontos: 456 },
-            { nome: 'Vinicius Lima', pontos: 567 },
-            { nome: 'Vinicius Lima', pontos: 678 },
-            { nome: 'Vinicius Lima', pontos: 789 },
-            { nome: 'Vinicius Lima', pontos: 890 },
-            { nome: 'Vinicius Lima', pontos: 901 },
-            { nome: 'Vinicius Lima', pontos: 1012 },
-        ]);
+        retorno = await Promise.resolve(historicoPontosUsuarioTop10);
+        retorno = retorno.map((item)=>({...item, nome: usuario.nome}))
     }
 
     ordenarRanking(retorno);
     return retorno;
+}
+
+export const buscarMaiorRankUsuario = async (usuario) => {
+    return await Promise.resolve({...dadosUsuarioMaiorPontuacaoRankingGlobal, nome: usuario.nome});
 }
 
 const ordenarRanking = (ranking) => {

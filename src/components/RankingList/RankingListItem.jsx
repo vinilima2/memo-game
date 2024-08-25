@@ -9,15 +9,15 @@ import ImgTerceiroLugar from "../../assets/ranking/terceiro.png";
 
 const RankingListItem = ({
   user = { nome: "", pontos: 0 },
-  ranking,
   tipoRanking,
+  usuarioLogado,
 }) => {
   const rankImage = useMemo(() => {
-    if (ranking > 3) {
+    if (user.rank > 3) {
       return null;
     }
 
-    switch (ranking) {
+    switch (user.rank) {
       case 1:
         return ImgPrimeiroLugar;
       case 2:
@@ -33,11 +33,12 @@ const RankingListItem = ({
       className="ranking-item"
       style={{
         backgroundColor: rankImage ? "#212529" : "#1C2023",
+        border: usuarioLogado ? "2px solid #FFD700" : "none",
       }}
     >
       <div className="ranking-item-left-content">
         <div className="ranking-item-rank">
-          {rankImage ? <img src={rankImage} /> : ranking}
+          {rankImage ? <img src={rankImage} /> : user.rank}
         </div>
 
         {tipoRanking == tipoRankingType.GLOBAL ? (
@@ -58,6 +59,7 @@ RankingListItem.propTypes = {
   }),
   ranking: PropTypes.number,
   tipoRanking: PropTypes.string,
+  usuarioLogado: PropTypes.bool,
 };
 
 export default RankingListItem;
