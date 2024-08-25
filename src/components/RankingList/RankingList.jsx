@@ -1,38 +1,64 @@
 import RankingListItem from "./RankingListItem";
 import PropTypes from "prop-types";
 import { Stack } from "react-bootstrap";
-import { tipoRankingType } from "../../utils/ranking";
+import { buscarMaiorRankUsuario, tipoRankingType } from "../../utils/ranking";
+import ImagemTrofeu from "../../assets/ranking/trofeu.png";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { TokenContext } from "../../main";
 
 const RankingList = ({ usersList, tipoRanking }) => {
-  return <Stack className="align-items-center mt-5">
-  {tipoRanking == tipoRankingType.GLOBAL ?
-    <h1>Ranking Global</h1>
-    :
-    <h1>Ranking {usersList[0].nome}</h1>
-  }
-    <div className="d-flex flex-column align-itens-center w-50 mt-5" style={{gap: '20px'}}>
-      <Stack direction="horizontal" className="justify-content-between px-lg-3">
-        <span style={{fontSize: '1.4rem', width: '200px'}}>POSIÇÃO</span>
+  const {usuario} = useContext(TokenContext);
+  const [userGlobalRank, setUserGlobalRank] = useState(null);
 
-        {tipoRanking == tipoRankingType.GLOBAL? 
-          <span style={{fontSize: '1.4rem'}}>NOME</span>
-          :
-          null
-        }
+  const usuarioEstaNoTop10 = useMemo(() => {
+    console.log(usersList)
+    console.log(userGlobalRank)
+    // OBS: Só vai funcionar se o nome for único
+    return usersList.some((user) => user.nome === usuario.nome);
+  }, [usersList, userGlobalRank, usuario]);
 
-        <span style={{fontSize: '1.4rem', width: '200px', textAlign: 'right'}}>PONTUAÇÃO</span>
+  useEffect(() => {
+    buscarMaiorRankUsuario(usuario).then((userTopRank) => {
+      setUserGlobalRank(userTopRank);
+    });
+  }, [usuario])
+
+  return (
+    <Stack className="ranking-list-container">
+      <Stack className="ranking-list-header" direction="vertical">
+        <img src={ImagemTrofeu}/>
+
+        {tipoRanking == tipoRankingType.GLOBAL ? (
+          <h1>Ranking Global</h1>
+        ) : (
+          <>
+            <h1>{usersList[0].nome}</h1>
+            <h3>Record Pessoal</h3>
+          </>
+        )}
       </Stack>
-
-      {usersList.map((user, index) => (
-        <RankingListItem
-          key={`${index}-${user.pontos}`}
-          user={user}
-          ranking={index + 1}
-          tipoRanking={tipoRanking}
-        />
-      ))}
-    </div>
-  </Stack>
+      <div
+        className="ranking-list-content"
+      >
+        {usersList.map((user, index) => (
+          <RankingListItem
+            key={`${index}-${user.pontos}`}
+            user={user}
+            tipoRanking={tipoRanking}
+            usuarioLogado={user.nome === usuario.nome}
+          />
+        ))}
+        {!usuarioEstaNoTop10 && tipoRanking == tipoRankingType.GLOBAL && userGlobalRank ?
+        (
+          <RankingListItem
+            user={userGlobalRank}
+            tipoRanking={tipoRanking}
+            usuarioLogado
+          />
+        ) : null}
+      </div>
+    </Stack>
+  );
 };
 
 RankingList.propTypes = {
