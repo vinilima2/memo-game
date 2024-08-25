@@ -13,7 +13,10 @@ const RankingList = ({ usersList, tipoRanking }) => {
         {tipoRanking == tipoRankingType.GLOBAL ? (
           <h1>Ranking Global</h1>
         ) : (
-          <h1>Ranking {usersList[0].nome}</h1>
+          <>
+            <h1>{usersList[0].nome}</h1>
+            <h3>Record Pessoal</h3>
+          </>
         )}
       </Stack>
       <div

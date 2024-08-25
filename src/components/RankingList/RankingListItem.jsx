@@ -44,8 +44,9 @@ const RankingListItem = ({
           <span className="nome">{user.nome}</span>
         ) : null}
       </div>
-
-      <span className="ranking-item-right-content">{user.pontos} pts</span>
+      <span className="ranking-item-right-content">
+        {user.pontos} <i>pts</i>
+      </span>
     </Stack>
   );
 };
