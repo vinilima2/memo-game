@@ -1,13 +1,14 @@
-import { useState, useEffect, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { dadosNivel } from "../mocks/dados";
-import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
+import {useState, useEffect, useRef} from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import {dadosNivel} from "../mocks/dados";
+import {Button, Col, Container, Modal, Row, Spinner} from "react-bootstrap";
 import Cartao from "../components/Cartao";
 import Cronometro from "../components/Cronometro";
 import Sucesso from "../assets/sucesso.mp3"
 import Erro from "../assets/erro.mp3"
 import Encerramento from "../assets/encerramento.mp3"
-import {buscarCartas} from "../services/api.js";
+import {get, post} from "../services/api.js";
+import {tipoRankingType} from "../utils/ranking.js";
 
 
 export default function Jogo() {
@@ -59,10 +60,14 @@ export default function Jogo() {
         }
         const total = (acertos * dadosNivel[nivel].pesoAcerto) - (erros * dadosNivel[nivel].pesoErro) + (tempoRestante * dadosNivel[nivel].bonus)
         setPontuacao(total)
-    }, [acertos,])
+    }, [acertos])
+
+    useEffect(() => {
+        if (finalizou) salvarPontuacao()
+    }, [finalizou]);
 
     async function gerarCartoes(quantidade) {
-        const cartoesPadrao = await buscarCartas()
+        const cartoesPadrao = await get("/cards")
         let cartoesEscolhidos = []
         while (cartoesEscolhidos.length !== quantidade) {
             let posicao = Math.floor((Math.random() * cartoesPadrao.length) + 1)
@@ -73,6 +78,14 @@ export default function Jogo() {
             }
         }
         misturarCartas(cartoesEscolhidos)
+    }
+
+    async function salvarPontuacao() {
+        const dados = await get(`/users?email=${localStorage.getItem("email")}`) // NUNCA FAÇA ISSO NA VIDA REAL
+        const resposta = await post("/ranking", {
+            pontuacao,
+            usuario: dados[0].username
+        })
     }
 
     function misturarCartas(cartoes) {
@@ -196,7 +209,7 @@ export default function Jogo() {
                         Você atingiu <strong> {pontuacao}</strong> pontos.
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button>Abrir Ranking</Button>
+                        <Button onClick={() => navigate('/ranking/' + tipoRankingType.GLOBAL)}>Abrir Ranking</Button>
                     </Modal.Footer>
                 </Modal>
                 <audio src={Sucesso} id="sucesso"/>

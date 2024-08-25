@@ -1,12 +1,12 @@
 {
-  "cartas": [
+  "cards": [
     {
       "icone": "star-fill",
       "cor": "yellow"
     },
     {
       "icone": "moon-fill",
-      "cor": "gray"
+      "cor": "darkgray"
     },
     {
       "icone": "flower1",
@@ -42,19 +42,19 @@
     },
     {
       "icone": "truck-front-fill",
-      "cor": "gray"
+      "cor": "darkgray"
     },
     {
       "icone": "car-front-fill",
-      "cor": "gray"
+      "cor": "darkgray"
     },
     {
       "icone": "airplane-fill",
-      "cor": "gray"
+      "cor": "darkgray"
     },
     {
       "icone": "scissors",
-      "cor": "gray"
+      "cor": "darkgray"
     },
     {
       "icone": "pencil-fill",
@@ -70,13 +70,11 @@
     },
     {
       "icone": "train-front-fill",
-      "cor": "gray"
+      "cor": "darkgray"
     }
   ],
-  "usuarios": [
-    {
-      "id": "242345345",
-      "nome": "Juan Almeida dos Santos"
-    }
+  "users": [
+  ],
+  "ranking": [
   ]
 }

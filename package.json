@@ -8,12 +8,11 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "json-server src/services/db.json --watch --port 8080"
+    "server": "json-server-auth src/services/db.json --watch --port 8080"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
-    "json-server": "^1.0.0-beta.2",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18.3.1",
@@ -29,6 +28,8 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
+    "json-server": "^0.15.1",
+    "json-server-auth": "^2.0.3",
     "vite": "^5.4.1"
   }
 }
