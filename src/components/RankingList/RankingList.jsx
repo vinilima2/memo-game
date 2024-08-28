@@ -11,8 +11,6 @@ const RankingList = ({ usersList, tipoRanking }) => {
   const [userGlobalRank, setUserGlobalRank] = useState(null);
 
   const usuarioEstaNoTop10 = useMemo(() => {
-    console.log(usersList)
-    console.log(userGlobalRank)
     // OBS: Só vai funcionar se o nome for único
     return usersList.some((user) => user.nome === usuario.nome);
   }, [usersList, userGlobalRank, usuario]);
