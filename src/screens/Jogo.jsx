@@ -1,64 +1,17 @@
-import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { cartas, dadosNivel } from "../mocks/dados";
-import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
+import {useState, useEffect, useRef} from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import {cartas, dadosNivel} from "../mocks/dados";
+import {Button, Col, Container, Modal, Row, Spinner} from "react-bootstrap";
 import Cartao from "../components/Cartao";
 import "../Jogo.css";
 import Sucesso from "../assets/sucesso.mp3";
 import Erro from "../assets/erro.mp3";
 import Encerramento from "../assets/encerramento.mp3";
+import Cronometro from "../components/Cronometro.jsx";
 
-const Cronometro = forwardRef(function Cronometro(props, ref) {
-    const [segundos, setSegundos] = useState(null);
-    const [intervalo, setIntervalo] = useState(null);
-
-    useEffect(() => {
-        if (segundos <= 0) {
-            clearInterval(intervalo);
-        }
-    }, [segundos]);
-
-    useImperativeHandle(ref, () => ({
-        iniciarCronometro,
-        pararCronometro
-    }));
-
-    function iniciarCronometro(s) {
-        setSegundos(s);
-        const interval = setInterval(() => {
-            setSegundos(s => s - 1);
-        }, 1000);
-        setIntervalo(interval);
-    }
-
-    function pararCronometro() {
-        clearInterval(intervalo);
-        return segundos;
-    }
-
-    const getButtonClass = () => {
-        if (segundos <= 5 && segundos > 0) {
-            return "bg-danger pulse"; 
-        }
-        return "bg-primary";
-    };
-
-    return (
-        <Button 
-        size="lg" 
-        className={`m-2 ${getButtonClass()}`} 
-        style={{ 
-            display: segundos == null ? 'none' : 'initial', 
-            border: 'none',
-        }}
-    >
-        <i className='bi bi-stopwatch'></i> {segundos?.toString().padStart(2, "0")}
-    </Button>
-    );
-});
 
 export default function Jogo() {
-    const { nivel } = useParams();
+    const {nivel} = useParams();
     const navigate = useNavigate();
     const itemsRef = useRef([]);
     const refCronometro = useRef(null);
@@ -72,7 +25,7 @@ export default function Jogo() {
     const [cronometroClasse, setCronometroClasse] = useState("")
 
     useEffect(() => {
-        if (!nivel) navigate("/inicio");
+        if (!nivel) navigate("/ranking/GLOBAL");
         compararNivel(nivel);
     }, [nivel, navigate]);
 
@@ -199,19 +152,24 @@ export default function Jogo() {
 
     return (
         <Container fluid className="jogo-container">
+            <h2 className="jogo-title">MemoGame</h2>
             <Row className="justify-content-center mb-3">
                 <Col className="text-center">
-                    <Button 
-                        className="btn-iniciar"
-                        size="lg" 
-                        onClick={iniciar}
-                        style={{ display: iniciou ? 'none' : 'block' }}>
-                        <i className="bi bi-play"></i> Iniciar
-                    </Button>
-                    <Cronometro ref={el => refCronometro.current = el} className={cronometroClasse} />
+                    <div className="btn-iniciar-wrapper" style={{display: iniciou ? 'none' : 'flex'}}>
+                        <Button
+                            className="btn-iniciar px-4 py-2"
+                            size="lg"
+                            onClick={iniciar}>
+                            <i className="bi bi-play"></i> Iniciar
+                        </Button>
+                    </div>
+
+
+                    <Cronometro ref={el => refCronometro.current = el} className={cronometroClasse}/>
                 </Col>
             </Row>
-            <Row className="justify-content-center mb-3" style={{ display: iniciou ? 'flex' : 'none' }}>
+            <Row className="status-game justify-content-center mb-3 status-game"
+                 style={{display: iniciou ? 'flex' : 'none'}}>
                 <Col className="text-center stats-col">
                     <i className="bi bi-x-circle text-danger"></i> <span className="text-danger">{erros}</span>
                 </Col>
@@ -222,26 +180,26 @@ export default function Jogo() {
                     <i className="bi bi-trophy-fill text-info"></i> <span className="text-info">{pontuacao}</span>
                 </Col>
             </Row>
-            
+
             <div className="cartoes-container">
-                <Row className="card-grid">
+                <div className="card-grid">
                     {cartoes.length > 0 ? (
                         cartoes.map((cartao, indice) => (
-                            <Col key={indice} className="card-col">
+                            <div key={indice} className="card-col">
                                 <Cartao
                                     cor={cartao.cor}
                                     icone={cartao.icone}
                                     selecionarCartao={() => selecionarCartao(indice)}
                                     ref={el => itemsRef.current[indice] = el}
                                 />
-                            </Col>
+                            </div>
                         ))
                     ) : (
-                        <Spinner animation="border" />
+                        <Spinner animation="border"/>
                     )}
-                </Row>
+                </div>
             </div>
-            <Modal show={finalizou} centered data-bs-theme="dark" className="modal-finish">
+            <Modal show={finalizou} centered data-bs-theme="dark">
                 <Modal.Header>
                     <Modal.Title className="text-light">Parabéns! Você completou o desafio</Modal.Title>
                 </Modal.Header>
@@ -249,12 +207,12 @@ export default function Jogo() {
                     Você atingiu <strong>{pontuacao}</strong> pontos.
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button>Ver Ranking</Button>
+                    <Button onClick={() => navigate('/ranking/GLOBAL')}>Ver Ranking</Button>
                 </Modal.Footer>
             </Modal>
-            <audio src={Sucesso} id="sucesso" />
-            <audio src={Erro} id="erro" />
-            <audio src={Encerramento} id="encerramento" />
+            <audio src={Sucesso} id="sucesso"/>
+            <audio src={Erro} id="erro"/>
+            <audio src={Encerramento} id="encerramento"/>
         </Container>
     );
 }

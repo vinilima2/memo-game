@@ -36,12 +36,20 @@ body {
 }
 
 .flip {
-    height: 200px;
-    width: 200px;
+    height: 120px;
+    width: 120px;
     cursor: pointer;
     transition: transform 800ms;
     transform-style: preserve-3d;
     transform: rotateY(0deg);
+    background: white;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+}
+
+.flip i {
+    line-height: 0;
 }
 
 .card-body {
@@ -51,18 +59,17 @@ body {
 }
 
 .icon {
-    font-size: 120px;
+    font-size: 80px;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 768px) {
     .flip {
-        height: 120px;
-        width: 120px;
-        font-size: 50px !important;
+        height: 90px;
+        width: 90px;
     }
 
     .icon {
-        font-size: 50px;
+        font-size: 45px;
     }
 }
 

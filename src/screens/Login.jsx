@@ -1,6 +1,6 @@
 import React, {useState, useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
-import '../index2.css';
+import '../login.css';
 import {TokenContext} from "../main.jsx";
 import Logo from "../components/Logo.jsx";
 
@@ -22,7 +22,7 @@ const LoginPage = () => {
             const tk = "abcdefghij"
             setToken(tk)
             localStorage.setItem("memo-game-token", tk)
-            navigate('/inicio');
+            navigate('/ranking/GLOBAL');
         } else {
             setError('Credenciais inválidas');
         }

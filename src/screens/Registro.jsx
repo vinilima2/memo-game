@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../index2.css';
+import '../login.css';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
@@ -23,7 +23,7 @@ const RegisterPage = () => {
     }
 
     // colocar a lógica de cadastro aqui (se necessário), por enquanto vai direto para a pag do game
-    navigate('/inicio');
+    navigate('/');
   };
 
   return (
