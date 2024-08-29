@@ -34,7 +34,7 @@ const RankingButtons = (tipoRanking) => {
             </div>
 
             <Modal show={visivel} data-bs-theme="dark">
-            <Modal.Header closeButton>
+                <Modal.Header closeButton onClick={()=> setVisibilidade(false)}>
                     <Modal.Title  className="text-light">Confirmar</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>

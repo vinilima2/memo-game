@@ -168,7 +168,7 @@ export default function Jogo() {
                     <Cronometro ref={el => refCronometro.current = el} className={cronometroClasse}/>
                 </Col>
             </Row>
-            <Row className="status-game justify-content-center mb-3 status-game"
+            <Row className="justify-content-center mb-3"
                  style={{display: iniciou ? 'flex' : 'none'}}>
                 <Col className="text-center stats-col">
                     <i className="bi bi-x-circle text-danger"></i> <span className="text-danger">{erros}</span>
