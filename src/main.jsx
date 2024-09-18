@@ -7,13 +7,26 @@ import './index.css'
 import {createContext, useState} from "react";
 
 
-export const TokenContext = createContext()
+export const TokenContext = createContext(
+    {
+        token: null,
+        setToken: () => {},
+        usuario: {nome: undefined}
+    }
+)
 
 export const TokenProvider = ({children}) => {
     const [token, setToken] = useState(localStorage.getItem("memo-game-token"))
+    const [usuario, setUsuario] = useState(dadosUsuario)
+
+    useEffect(() => {
+        if(token){
+            //TODO: Realizar o decode do JWT e extrair dados de usuario
+        }
+    }, [token])
 
     return (
-        <TokenContext.Provider value={{token, setToken}}>
+        <TokenContext.Provider value={{token, setToken, usuario}}>
             {children}
         </TokenContext.Provider>
     );

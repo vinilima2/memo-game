@@ -1,28 +1,27 @@
 // Implementação provisória de métodos e requisição para exibição do ranking
 
+import { dadosUsuarioMaiorPontuacaoRankingGlobal, historicoPontosUsuarioTop10, rankingGlobalTop10 } from "../mocks/dados";
+
 // Requisitar informações do ranking
-export const buscarRanking = async (tipoRanking) => {
+export const buscarRanking = async (tipoRanking, usuario) => {
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     let retorno;
 
     if (tipoRanking === tipoRankingType.GLOBAL) {
-        retorno = await Promise.resolve([
-            { nome: 'Alice', pontos: 100 },
-            { nome: 'Bob', pontos: 90 },
-            { nome: 'Carol', pontos: 80 }
-        ]);
-    }else{
-        retorno = await Promise.resolve([
-            { nome: 'Alice', pontos: 100 },
-            { nome: 'Bob', pontos: 90 },
-            { nome: 'Carol', pontos: 80 }
-        ]);
-
+        // TODO: Implementar consulta aqui
+        retorno = await Promise.resolve(rankingGlobalTop10);
+    } else {
+        retorno = await Promise.resolve(historicoPontosUsuarioTop10);
+        retorno = retorno.map((item)=>({...item, nome: usuario.nome}))
     }
 
     ordenarRanking(retorno);
     return retorno;
+}
+
+export const buscarMaiorRankUsuario = async (usuario) => {
+    return await Promise.resolve({...dadosUsuarioMaiorPontuacaoRankingGlobal, nome: usuario.nome});
 }
 
 const ordenarRanking = (ranking) => {

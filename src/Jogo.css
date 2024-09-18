@@ -1,0 +1,211 @@
+.jogo-container {
+    background-color: #1a1a1a;
+    min-height: 100vh;
+    /*padding: 10px;*/
+    color: #e0e0e0;
+    font-family: 'Roboto', sans-serif;
+    border: 2px solid #333;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.jogo-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    font-weight: 900;
+    margin: 10px 0;
+    color: #ffffff;
+    text-shadow: 0px 0px 15px rgb(204, 204, 204, 0.5);
+}
+
+
+.btn-iniciar-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+}
+
+
+.btn-iniciar {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.125rem;
+    font-weight: 500;
+    box-shadow: 0px 0px 8px rgba(0, 72, 179, 0.5);
+    transition: all 0.3s ease;
+    max-width: 200px;
+
+}
+
+.btn-iniciar:hover,
+.btn-iniciar.teste-botao:hover {
+    background-color: #0056b3;
+    box-shadow: 0 0px 6px rgba(255, 255, 255, 0.5);
+}
+
+
+.btn-iniciar.teste-botao:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 992px) {
+    .btn-iniciar {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .btn-iniciar {
+        max-width: 250px;
+    }
+}
+
+@media (max-width: 576px) {
+    .btn-iniciar {
+        max-width: 200px;
+    }
+}
+
+
+.stats-col i {
+    margin: 0.5rem;
+    font-size: 1.5rem;
+    color: #e0e0e0;
+}
+
+
+.stats-col {
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    flex: 0 !important;
+}
+
+.card-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.cartoes-container {
+    margin: 8px;
+    padding: 0 20%;
+}
+
+
+.card-col {
+    /*padding: 0.5rem;*/
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: 1;
+    align-items: center;
+    justify-content: center;
+    /*min-width: 200px;*/
+    /*max-width: 300px;*/
+}
+
+@media (max-width: 768px) {
+    .card-col {
+        /*min-width: 90px;*/
+        margin: 0 10px;
+    }
+
+    .card-grid {
+        column-gap: 0;
+    }
+
+    .cartoes-container {
+        padding: 0;
+    }
+}
+
+
+.card-col:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-col img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: box-shadow 0.3s ease;
+}
+
+
+/*css do cronometro*/
+
+.bg-primary {
+    background-color: #007bff;
+}
+
+.bg-danger {
+    background-color: #dc3545;
+
+}
+
+.pulse {
+    animation: pulse 1s infinite;
+    box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.5);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+.cronometro {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    transition: color 0.3s ease;
+
+}
+
+.cronometro-pulso {
+
+    color: red;
+    animation: pulso 1s infinite;
+}
+
+@keyframes pulso {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
