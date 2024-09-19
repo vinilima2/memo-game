@@ -74,7 +74,12 @@
     }
   ],
   "users": [
+    {
+      "email": "teste@teste.com",
+      "password": "$2a$10$zkc7S5BpU5knspFmxnNqF.NvERkI47iYTsyT0tQy2Sbx04FL8s9/e",
+      "username": "456456",
+      "id": 1
+    }
   ],
-  "ranking": [
-  ]
+  "ranking": []
 }

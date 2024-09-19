@@ -4,7 +4,8 @@ import {routes} from './routes/Router.jsx'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './index.css'
-import {createContext, useState} from "react";
+import {createContext, useState, useEffect} from "react";
+import {dadosUsuario} from "./mocks/dados.js";
 
 
 export const TokenContext = createContext(
