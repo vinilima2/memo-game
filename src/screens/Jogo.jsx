@@ -9,7 +9,6 @@ import Erro from "../assets/erro.mp3";
 import Encerramento from "../assets/encerramento.mp3";
 import Cronometro from "../components/Cronometro.jsx";
 import {get, post} from "../services/api.js";
-import {tipoRankingType} from "../utils/ranking.js";
 
 export default function Jogo() {
     const {nivel} = useParams();
@@ -27,7 +26,8 @@ export default function Jogo() {
 
     useEffect(() => {
         if (!nivel) navigate("/ranking/GLOBAL");
-        compararNivel(nivel);
+        buscarCartas()
+        // compararNivel(nivel);
     }, [nivel, navigate]);
 
     useEffect(() => {
@@ -58,9 +58,6 @@ export default function Jogo() {
         }
     }, [iniciou]);
 
-    function compararNivel(nivel) {
-        gerarCartoes(dadosNivel[nivel].quantidadeCartas);
-    }
 
     useEffect(() => {
         let tempoRestante = 0;
@@ -77,42 +74,20 @@ export default function Jogo() {
         if (finalizou) salvarPontuacao()
     }, [finalizou]);
 
-    function gerarCartoes(quantidade) {
-        const cartoesPadrao = cartas.slice();
-        let cartoesEscolhidos = [];
-        while (cartoesEscolhidos.length < quantidade) {
-            const posicao = Math.floor(Math.random() * cartoesPadrao.length);
-            const cartaoEscolhido = cartoesPadrao[posicao];
-            if (cartaoEscolhido) {
-                cartoesEscolhidos.push(cartaoEscolhido);
-                cartoesPadrao.splice(posicao, 1);
-            }
-        }
-        misturarCartas(cartoesEscolhidos);
-    }
+
 
     async function salvarPontuacao() {
-        const dados = await get(`/users?email=${localStorage.getItem("email")}`) // NUNCA FAÇA ISSO NA VIDA REAL
+        const dados = await get(`/users?email=${localStorage.getItem("email")}`) // TODO NUNCA FAÇA ISSO NA VIDA REAL
         const resposta = await post("/ranking", {
             pontuacao,
             usuario: dados[0].username
         })
     }
 
-    function misturarCartas(cartoes) {
-        const cartoesDuplicados = cartoes.concat(cartoes);
-        const tamanhoLista = cartoesDuplicados.length;
-        let cartoesMesclados = [];
-
-        while (cartoesMesclados.length < tamanhoLista) {
-            const posicao = Math.floor(Math.random() * cartoesDuplicados.length);
-            const cartao = cartoesDuplicados[posicao];
-            if (cartao) {
-                cartoesMesclados.push(cartao);
-                cartoesDuplicados.splice(posicao, 1);
-            }
-        }
-        setCartoes(cartoesMesclados);
+    function buscarCartas() {
+        get('/cartas/get/random?qtd=' + dadosNivel[nivel].quantidadeCartas).then(result => {
+            if (result && Array.isArray(result)) setCartoes(result)
+        })
     }
 
     function iniciar() {
