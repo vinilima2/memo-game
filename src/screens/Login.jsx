@@ -1,4 +1,4 @@
-import {useState, useContext} from 'react';
+import {useState, useContext, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import '../login.css';
 import {TokenContext} from "../main.jsx";
@@ -10,7 +10,14 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const {setToken} = useContext(TokenContext);
+    const {token, setToken} = useContext(TokenContext);
+
+    // Verfica se tem um usuário logado
+    useEffect(()=>{
+        if(token){
+            navigate('/ranking/GLOBAL');
+        }
+    },[]);
 
     const handleLogin = (e) => {
         e.preventDefault();
