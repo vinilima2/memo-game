@@ -15,7 +15,6 @@ class UserProvider extends ProviderInterface{
         return this.post('usuarios/login', {nome, senha}).then((response) => {
             return response.json();
         }).then((data)=>{
-            this.definirTokenNoCookie(data.token);
             return [true, data.token];
         }).catch((error) => {
             console.error(error);
@@ -31,10 +30,6 @@ class UserProvider extends ProviderInterface{
             console.error(error);
             return false;
         });
-    }
-
-    definirTokenNoCookie(token){
-        document.cookie = `token=${token}`;
     }
 };
 
