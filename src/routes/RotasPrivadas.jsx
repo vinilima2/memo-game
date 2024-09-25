@@ -4,9 +4,9 @@ import {Navigate, Outlet, useLocation} from "react-router-dom";
 
 export default function RotasPrivadas() {
     const location = useLocation();
-    const {token} = useContext(TokenContext)
+    const {token, validaToken} = useContext(TokenContext)
 
-    return token
+    return token && validaToken(token)
         ? <Outlet/>
         : <Navigate to="/" replace state={{from: location}}/>;
 
