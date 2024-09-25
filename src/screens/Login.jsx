@@ -1,15 +1,16 @@
-import React, {useState, useContext} from 'react';
+import {useState, useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
 import '../login.css';
 import {TokenContext} from "../main.jsx";
 import Logo from "../components/Logo.jsx";
+import UserProvider from '../providers/user';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const {token, setToken} = useContext(TokenContext);
+    const {setToken} = useContext(TokenContext);
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -18,14 +19,19 @@ const LoginPage = () => {
             return;
         }
 
-        if (username === 'user' && password === 'pass') {
-            const tk = "abcdefghij"
-            setToken(tk)
-            localStorage.setItem("memo-game-token", tk)
-            navigate('/ranking/GLOBAL');
-        } else {
+        UserProvider.login(username, password).then(([response, token])=>{
+            console.log(response, token);
+            if(response){
+                // TODO: Captar o token e armazenar no context
+                setToken(token);
+                navigate('/ranking/GLOBAL');
+            }else{
+                throw new Error('Usuário ou senha inválidos');
+            }
+        }).catch(()=>{
             setError('Credenciais inválidas');
-        }
+        })
+        // TIP: Loading pode melhorar a experiencia do usuário
     };
 
     const handleRegister = () => {

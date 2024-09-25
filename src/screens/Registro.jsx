@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import UserProvider from '../providers/user';
 import '../login.css';
 
 const RegisterPage = () => {
@@ -22,8 +23,21 @@ const RegisterPage = () => {
       return;
     }
 
+    const usuario = {
+      nome: username,
+      email,
+      senha: password,
+    }
+
     // colocar a lógica de cadastro aqui (se necessário), por enquanto vai direto para a pag do game
-    navigate('/');
+    UserProvider.registrar(usuario).then((response)=>{
+      if(response){
+        navigate('/');
+      }else{
+        setError('Erro ao registrar usuário');
+      }
+    })
+    //TIP: Loading pode melhorar a experiencia do usuário
   };
 
   return (
