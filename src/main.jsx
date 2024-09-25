@@ -25,7 +25,7 @@ export const TokenProvider = ({children}) => {
         if(token){
             decodeToken();
         }
-    },[])
+    },[token])
 
     const setToken = useCallback((novoToken)=>{
         setTokenState(novoToken);
@@ -36,7 +36,10 @@ export const TokenProvider = ({children}) => {
     },[])
 
     const validaToken = useCallback(()=>{
-        if (!token) return false;
+        if (!token) {
+            localStorage.removeItem("memo-game-token");
+            return false
+        };
         const decoded = jwtDecode(token);
         const currentTime = Date.now() / 1000;
         return decoded.exp > currentTime;
