@@ -1,6 +1,7 @@
-import {useState, useEffect, useRef} from "react";
+import {useState, useEffect, useRef, useContext} from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import {cartas, dadosNivel} from "../mocks/dados";
+import {dadosNivel} from "../mocks/dados";
+import CartasProvider from "../providers/cartas.js";
 import {Button, Col, Container, Modal, Row, Spinner} from "react-bootstrap";
 import Cartao from "../components/Cartao";
 import "../Jogo.css";
@@ -8,6 +9,8 @@ import Sucesso from "../assets/sucesso.mp3";
 import Erro from "../assets/erro.mp3";
 import Encerramento from "../assets/encerramento.mp3";
 import Cronometro from "../components/Cronometro.jsx";
+import { registrarRecord } from "../utils/recordUsuario.js";
+import { TokenContext } from "../main.jsx";
 
 
 export default function Jogo() {
@@ -22,6 +25,7 @@ export default function Jogo() {
     const [pontuacao, setPontuacao] = useState(0);
     const [iniciou, setIniciou] = useState(false);
     const [finalizou, setFinalizou] = useState(false);
+    const {usuario} = useContext(TokenContext)
     const [cronometroClasse, setCronometroClasse] = useState("")
 
     useEffect(() => {
@@ -69,37 +73,14 @@ export default function Jogo() {
             setFinalizou(true);
         }
         const total = (acertos * dadosNivel[nivel].pesoAcerto) - (erros * dadosNivel[nivel].pesoErro) + (tempoRestante * dadosNivel[nivel].bonus);
-        setPontuacao(total);
+        registrarRecord(usuario, total).then(()=>{
+            setPontuacao(total);
+        });
     }, [acertos, erros, nivel]);
 
-    function gerarCartoes(quantidade) {
-        const cartoesPadrao = cartas.slice();
-        let cartoesEscolhidos = [];
-        while (cartoesEscolhidos.length < quantidade) {
-            const posicao = Math.floor(Math.random() * cartoesPadrao.length);
-            const cartaoEscolhido = cartoesPadrao[posicao];
-            if (cartaoEscolhido) {
-                cartoesEscolhidos.push(cartaoEscolhido);
-                cartoesPadrao.splice(posicao, 1);
-            }
-        }
-        misturarCartas(cartoesEscolhidos);
-    }
-
-    function misturarCartas(cartoes) {
-        const cartoesDuplicados = cartoes.concat(cartoes);
-        const tamanhoLista = cartoesDuplicados.length;
-        let cartoesMesclados = [];
-
-        while (cartoesMesclados.length < tamanhoLista) {
-            const posicao = Math.floor(Math.random() * cartoesDuplicados.length);
-            const cartao = cartoesDuplicados[posicao];
-            if (cartao) {
-                cartoesMesclados.push(cartao);
-                cartoesDuplicados.splice(posicao, 1);
-            }
-        }
-        setCartoes(cartoesMesclados);
+    async function gerarCartoes(quantidade) {
+        const cartoesEscolhidos = await CartasProvider.buscarCartasAleatorias(quantidade);
+        setCartoes(cartoesEscolhidos);
     }
 
     function iniciar() {

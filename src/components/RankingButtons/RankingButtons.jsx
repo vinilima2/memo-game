@@ -1,10 +1,14 @@
 import {tipoRankingType} from "../../utils/ranking";
 import {Button, Modal} from "react-bootstrap";
 import PropTypes from "prop-types";
-import {useState} from "react";
+import {useCallback, useState} from "react";
 
 const RankingButtons = (tipoRanking) => {
     const [visivel, setVisibilidade] = useState(false)
+
+    const logoutHandler = useCallback(() => {
+        localStorage.removeItem("memo-game-token");
+    }, []);
 
     return (
         <>
@@ -41,7 +45,7 @@ const RankingButtons = (tipoRanking) => {
                     <p  className="text-light">Deseja realmente sair do MemoGame?</p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="outline-danger" href="/">Sair</Button>
+                    <Button onClick={logoutHandler} variant="outline-danger" href="/">Sair</Button>
                 </Modal.Footer>
             </Modal>
         </>

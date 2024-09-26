@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import UserProvider from '../providers/user';
 import '../login.css';
+import { TokenContext } from '../main';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
@@ -9,6 +11,14 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [token] = useContext(TokenContext)
+
+  // Verfica se tem um usuário logado
+  useEffect(()=>{
+      if(token){
+          navigate('/ranking/GLOBAL');
+      }
+  },[]);
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -22,8 +32,21 @@ const RegisterPage = () => {
       return;
     }
 
+    const usuario = {
+      nome: username,
+      email,
+      senha: password,
+    }
+
     // colocar a lógica de cadastro aqui (se necessário), por enquanto vai direto para a pag do game
-    navigate('/');
+    UserProvider.registrar(usuario).then((response)=>{
+      if(response){
+        navigate('/');
+      }else{
+        setError('Erro ao registrar usuário');
+      }
+    })
+    //TIP: Loading pode melhorar a experiencia do usuário
   };
 
   return (
