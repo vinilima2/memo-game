@@ -11,7 +11,7 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const [token] = useContext(TokenContext)
+  const {token} = useContext(TokenContext)
 
   // Verfica se tem um usuário logado
   useEffect(()=>{
