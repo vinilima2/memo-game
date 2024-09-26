@@ -1,6 +1,7 @@
 import {useState, useEffect, useRef} from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import {cartas, dadosNivel} from "../mocks/dados";
+import {dadosNivel} from "../mocks/dados";
+import CartasProvider from "../providers/cartas.js";
 import {Button, Col, Container, Modal, Row, Spinner} from "react-bootstrap";
 import Cartao from "../components/Cartao";
 import "../Jogo.css";
@@ -72,34 +73,9 @@ export default function Jogo() {
         setPontuacao(total);
     }, [acertos, erros, nivel]);
 
-    function gerarCartoes(quantidade) {
-        const cartoesPadrao = cartas.slice();
-        let cartoesEscolhidos = [];
-        while (cartoesEscolhidos.length < quantidade) {
-            const posicao = Math.floor(Math.random() * cartoesPadrao.length);
-            const cartaoEscolhido = cartoesPadrao[posicao];
-            if (cartaoEscolhido) {
-                cartoesEscolhidos.push(cartaoEscolhido);
-                cartoesPadrao.splice(posicao, 1);
-            }
-        }
-        misturarCartas(cartoesEscolhidos);
-    }
-
-    function misturarCartas(cartoes) {
-        const cartoesDuplicados = cartoes.concat(cartoes);
-        const tamanhoLista = cartoesDuplicados.length;
-        let cartoesMesclados = [];
-
-        while (cartoesMesclados.length < tamanhoLista) {
-            const posicao = Math.floor(Math.random() * cartoesDuplicados.length);
-            const cartao = cartoesDuplicados[posicao];
-            if (cartao) {
-                cartoesMesclados.push(cartao);
-                cartoesDuplicados.splice(posicao, 1);
-            }
-        }
-        setCartoes(cartoesMesclados);
+    async function gerarCartoes(quantidade) {
+        const cartoesEscolhidos = await CartasProvider.buscarCartasAleatorias(quantidade);
+        setCartoes(cartoesEscolhidos);
     }
 
     function iniciar() {
