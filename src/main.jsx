@@ -36,13 +36,18 @@ export const TokenProvider = ({children}) => {
     },[])
 
     const validaToken = useCallback(()=>{
-        if (!token) {
-            localStorage.removeItem("memo-game-token");
-            return false
-        };
+        if (!token) return false;
+
         const decoded = jwtDecode(token);
         const currentTime = Date.now() / 1000;
-        return decoded.exp > currentTime;
+
+        if(decoded.exp > currentTime){
+            return true;
+        }else{
+            localStorage.removeItem("memo-game-token");
+        document.cookie = '';
+            return false;
+        };
     },[token])
 
     const decodeToken = useCallback(()=>{

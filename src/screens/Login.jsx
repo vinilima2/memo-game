@@ -27,7 +27,6 @@ const LoginPage = () => {
         }
 
         UserProvider.login(username, password).then(([response, token])=>{
-            console.log(response, token);
             if(response){
                 // TODO: Captar o token e armazenar no context
                 setToken(token);
