@@ -47,12 +47,12 @@ export class ProviderInterface{
     async postAutenticado(rota, body){
         return fetch(`${this.apiUrl}/${rota}`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
-            credentials: 'include',
             body: JSON.stringify(body)
-        })
+        });
     }
 
     async putAutenticado(rota, body){

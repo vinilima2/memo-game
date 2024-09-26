@@ -23,9 +23,8 @@ class UserProvider extends ProviderInterface{
     }
 
     async novoRecord(nome, pontuacao){
-        this.postAutenticado('usuarios/novorecorde', {nome, pontuacao}).then(() => {
-            // TODO: Implementar retorno aqui
-            return true;
+        return this.postAutenticado('usuarios/novorecorde', {nome, pontuacao}).then( async (response) => {
+            return response.json();
         }).catch((error) => {
             console.error(error);
             return false;

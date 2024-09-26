@@ -35,20 +35,19 @@ export const TokenProvider = ({children}) => {
         setUsuario({nome: conteudoJwt.sub})
     },[])
 
-    const validaToken = useCallback(()=>{
-        if (!token) return false;
-
+    const validaToken = useCallback((token)=>{
         const decoded = jwtDecode(token);
         const currentTime = Date.now() / 1000;
 
         if(decoded.exp > currentTime){
             return true;
         }else{
+            setTokenState(null);
             localStorage.removeItem("memo-game-token");
-        document.cookie = '';
+            document.cookie = '';
             return false;
         };
-    },[token])
+    },[])
 
     const decodeToken = useCallback(()=>{
         if (!token) return null;

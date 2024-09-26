@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from "react";
+import {useState, useEffect, useRef, useContext} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {dadosNivel} from "../mocks/dados";
 import CartasProvider from "../providers/cartas.js";
@@ -9,6 +9,8 @@ import Sucesso from "../assets/sucesso.mp3";
 import Erro from "../assets/erro.mp3";
 import Encerramento from "../assets/encerramento.mp3";
 import Cronometro from "../components/Cronometro.jsx";
+import { registrarRecord } from "../utils/recordUsuario.js";
+import { TokenContext } from "../main.jsx";
 
 
 export default function Jogo() {
@@ -23,6 +25,7 @@ export default function Jogo() {
     const [pontuacao, setPontuacao] = useState(0);
     const [iniciou, setIniciou] = useState(false);
     const [finalizou, setFinalizou] = useState(false);
+    const {usuario} = useContext(TokenContext)
     const [cronometroClasse, setCronometroClasse] = useState("")
 
     useEffect(() => {
@@ -70,7 +73,9 @@ export default function Jogo() {
             setFinalizou(true);
         }
         const total = (acertos * dadosNivel[nivel].pesoAcerto) - (erros * dadosNivel[nivel].pesoErro) + (tempoRestante * dadosNivel[nivel].bonus);
-        setPontuacao(total);
+        registrarRecord(usuario, total).then(()=>{
+            setPontuacao(total);
+        });
     }, [acertos, erros, nivel]);
 
     async function gerarCartoes(quantidade) {

@@ -7,6 +7,12 @@ class RankingProvider extends ProviderInterface{
             return response.json();
         })
     }
+
+    async buscarRankingUsuario(usuario){
+        return this.getAutenticado(`ranking/get/${usuario.nome}`).then(async (response) => {
+            return response.json();
+        })
+    }
 };
 
 export default new RankingProvider(memoApi);
